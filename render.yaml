@@ -1,0 +1,67 @@
+# Render Configuration for Laravel Deployment
+
+services:
+  # PHP Service
+  - type: web
+    name: radhe-store
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    buildCommand: ./build.sh
+    startCommand: apache2-foreground
+    
+    # Environment Variables
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://radhe-store.onrender.com
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: localhost
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: radhe_store
+      - key: DB_USERNAME
+        value: render
+      - key: DB_PASSWORD
+        generateValue: true
+      - key: CACHE_DRIVER
+        value: redis
+      - key: SESSION_DRIVER
+        value: redis
+      - key: QUEUE_CONNECTION
+        value: redis
+
+  # MySQL Database
+  - type: pserv
+    name: mysql
+    env: mysql
+    plan: free
+    stateful: true
+    
+    envVars:
+      - key: MYSQL_DATABASE
+        value: radhe_store
+      - key: MYSQL_USER
+        value: render
+      - key: MYSQL_PASSWORD
+        generateValue: true
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+
+  # Redis Cache
+  - type: pserv
+    name: redis
+    env: redis
+    plan: free
+    stateful: true
+
+# Working Directory
+workingDirectory: /var/www/html
