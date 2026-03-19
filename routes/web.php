@@ -79,3 +79,12 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/final-fix', function () {
+    try {
+        Artisan::call('migrate:fresh --force');
+        return "<h1>Success! 🎉</h1><p>ડેટાબેઝ ક્લીન થઈ ગયો છે અને નવા ટેબલ્સ બની ગયા છે.</p><a href='/'>હોમ પેજ પર જાઓ</a>";
+    } catch (\Exception $e) {
+        return "<h1>Error! ❌</h1><p>" . $e->getMessage() . "</p>";
+    }
+});
