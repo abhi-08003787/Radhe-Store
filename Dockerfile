@@ -22,6 +22,9 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+# ખાસ કરીને Directory Index સેટ કરવા માટે
+RUN echo "DirectoryIndex index.php index.html" >> /etc/apache2/apache2.conf
+
 # 3. Enable Apache ModRewrite
 RUN a2enmod rewrite
 
@@ -38,8 +41,12 @@ RUN cp .env.example .env || true
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
 # 7. Permissions and Directory setup
-RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache bootstrap/cache \
-    && chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache bootstrap/cache
+
+# Permissions ફરીથી સેટ કરો
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/public \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
 
 EXPOSE 80
