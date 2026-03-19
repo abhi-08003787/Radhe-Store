@@ -1,0 +1,22 @@
+# Laravel .htaccess - Redirect to public folder
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect all requests to public folder
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+    
+    # Handle requests that are already in public folder
+    RewriteCond %{REQUEST_URI} ^/public/
+    RewriteRule ^public/(.*)$ $1 [L]
+</IfModule>
+
+# Fallback to public/index.php
+DirectoryIndex public/index.php
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>

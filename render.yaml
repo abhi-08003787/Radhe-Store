@@ -10,6 +10,7 @@ services:
     buildCommand: ./build.sh
     startCommand: apache2-foreground
     documentRoot: /var/www/html/public
+    healthCheckPath: /health
     
     # Environment Variables
     envVars:
