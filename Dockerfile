@@ -26,8 +26,11 @@ RUN cp .env.example .env || true
 # Install dependencies and skip scripts
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
-# Permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Create necessary directories
+RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache bootstrap/cache
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
