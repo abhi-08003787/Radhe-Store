@@ -40,7 +40,8 @@ RUN mkdir -p storage/framework/sessions \
 # 7. Dependencies install
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
-# બિલ્ડ પ્રોસેસ દરમિયાન ડેટાબેઝ માઈગ્રેશન રન કરવા માટે
-RUN php artisan migrate --force
+
+# ડેટાબેઝ ક્લીન કરીને નવા ટેબલ્સ બનાવવા માટે
+RUN php artisan migrate:fresh --force
 
 EXPOSE 80
