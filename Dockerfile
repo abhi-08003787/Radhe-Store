@@ -17,17 +17,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
-    pdo_mysql \
-    pdo \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd \
-    xml \
-    zip
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Install Node.js separately after PHP extensions
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
