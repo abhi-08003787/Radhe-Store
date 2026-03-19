@@ -9,6 +9,7 @@ services:
     dockerfilePath: ./Dockerfile
     buildCommand: ./build.sh
     startCommand: apache2-foreground
+    documentRoot: /var/www/html/public
     
     # Environment Variables
     envVars:

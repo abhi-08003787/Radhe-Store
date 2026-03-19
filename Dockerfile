@@ -54,11 +54,12 @@ RUN php artisan key:generate \
 RUN npm install \
     && npm run build
 
+# Configure Apache to point to public directory
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && a2enmod rewrite
+
 # Expose port 80
 EXPOSE 80
-
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
 
 # Configure Apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
