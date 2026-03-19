@@ -27,10 +27,12 @@ COPY . .
 # Copy .env.example to .env and ensure it exists
 RUN cp .env.example .env || true
 
-# Set dummy environment variables to prevent Laravel from failing
-ENV APP_KEY=base64:uS68761H966H966H966H966H966H966H966H966H=
+# Set environment variables
+ENV APP_KEY=base64:uS68761H966H966H966H966H966H966H966H=
 ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE=:memory:
+ENV APP_DEBUG=false
+ENV APP_ENV=production
 
 # Install composer dependencies with platform reqs ignored and no scripts
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
@@ -42,11 +44,8 @@ RUN php artisan config:clear || true
 # Generate app key if missing
 RUN php artisan key:generate || true
 
-# Laravel optimization
-RUN php artisan config:cache \
-    && php artisan route:cache
-
 # Set correct permissions
+RUN chmod -R 775 storage bootstrap/cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 9000
