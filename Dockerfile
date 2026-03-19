@@ -27,11 +27,14 @@ COPY . .
 # Copy .env.example to .env and ensure it exists
 RUN cp .env.example .env || true
 
-# Install composer dependencies with platform reqs ignored
-RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs
+# Install composer dependencies with platform reqs ignored and no scripts
+RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
+
+# Run scripts manually
+RUN php artisan package:discover --ansi
 
 # Generate app key if missing
-RUN php artisan key:generate
+RUN php artisan key:generate || true
 
 # Laravel optimization
 RUN php artisan config:cache \
