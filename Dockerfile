@@ -40,7 +40,6 @@ RUN mkdir -p storage/framework/sessions \
 # 7. Dependencies install
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
-
-
-
 EXPOSE 80
+
+CMD php artisan migrate --force && apache2-foreground
