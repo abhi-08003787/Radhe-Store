@@ -14,19 +14,27 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libzip-dev \
-    nodejs \
-    npm \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js separately to avoid conflicts
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
-    gd \
     pdo_mysql \
     pdo \
     mbstring \
     exif \
+    pcntl \
     bcmath \
+    gd \
     xml \
-    zip \
-    && rm -rf /var/lib/apt/lists/*
+    zip
 
 # Clear Composer cache
 RUN composer clear-cache
