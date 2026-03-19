@@ -41,7 +41,6 @@ RUN mkdir -p storage/framework/sessions \
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
 
-# ડેટાબેઝ ક્લીન કરીને નવા ટેબલ્સ બનાવવા માટે
-RUN php artisan migrate:fresh --force
+
 
 EXPOSE 80
