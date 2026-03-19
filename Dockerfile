@@ -37,10 +37,15 @@ WORKDIR /var/www/html
 # પેહલા બધી ફાઈલો કોપી કરો
 COPY . .
 
-# 5. Permissions સેટ કરો (બિલ્ડ વખતે જ)
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
+# 5. જરૂરી ડિરેક્ટરીઓ બનાવવી અને પરમિશન સેટ કરવી
+RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+RUN mkdir -p /var/www/html/storage/framework/sessions \
+             /var/www/html/storage/framework/views \
+             /var/www/html/storage/framework/cache \
+             /var/www/html/bootstrap/cache
 
 # 6. Install dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
