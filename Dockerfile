@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# 1. Extensions install કરો
+# 1. Extensions install
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev \
     zip unzip git curl libzip-dev libonig-dev libxml2-dev \
@@ -8,24 +8,25 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# 2. Apache Configuration - પાથ બરાબર સેટ કરવા
+# 2. Apache Config - DocumentRoot સેટ કરવું
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# 3. PHP Handler સેટ કરો
-RUN printf '<Directory /var/www/html/public>\n\tDirectoryIndex index.php\n\tAllowOverride All\n\tRequire all granted\n</Directory>\n' > /etc/apache2/conf-available/laravel.conf \
+# 3. Apache ને Forcefully કહેવું કે index.php ક્યાં છે
+RUN printf '<Directory /var/www/html/public>\n\tDirectoryIndex index.php\n\tFallbackResource /index.php\n\tAllowOverride All\n\tRequire all granted\n</Directory>\n' > /etc/apache2/conf-available/laravel.conf \
     && a2enconf laravel && a2enmod rewrite
 
-# 4. Composer
+# 4. Get Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 5. ફાઈલો કોપી કરવાની સાચી રીત
 WORKDIR /var/www/html
+
+# 5. બધી ફાઈલો કોપી કરો
 COPY . .
 
-# 6. લારાવેલ માટે ફોલ્ડર્સ બનાવવા
+# 6. લારાવેલ માટે ફોલ્ડર્સ અને પરમિશન
 RUN mkdir -p storage/framework/sessions \
              storage/framework/views \
              storage/framework/cache \
@@ -33,7 +34,7 @@ RUN mkdir -p storage/framework/sessions \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache
 
-# 7. Dependencies install કરો
+# 7. Dependencies install
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
 EXPOSE 80
