@@ -1,10 +1,6 @@
-# Use the official PHP 8.3 Apache image
-FROM php:8.3-apache
+FROM php:8.2-fpm
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Install system dependencies
+# Install system dependencies including libjpeg and freetype
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -14,56 +10,21 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libzip-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+# Configure and install GD extension
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring exif pcntl bcmath xml zip
 
-# Install Node.js separately after PHP extensions
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get update \
-    && apt-get install -y nodejs \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Clear Composer cache
-RUN composer clear-cache
-
-# Copy composer.lock and composer.json
-COPY composer.lock composer.json ./
-
-# Install dependencies
-RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist
-
-# Copy existing application directory contents
+WORKDIR /var/www
 COPY . .
 
-# Copy .env.example to .env
-RUN cp .env.example .env
+RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Create storage link and set permissions
-RUN php artisan key:generate \
-    && php artisan storage:link \
-    && chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Install Node dependencies and build assets
-RUN npm install \
-    && npm run build
-
-# Configure Apache to point to public directory
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && a2enmod rewrite
-
-# Ensure Apache is configured correctly
-RUN echo "ServerName radhe-store.onrender.com" >> /etc/apache2/apache2.conf \
-    && echo "<Directory /var/www/html/public>" >> /etc/apache2/apache2.conf \
-    && echo "    AllowOverride All" >> /etc/apache2/apache2.conf \
-    && echo "    Require all granted" >> /etc/apache2/apache2.conf \
-    && echo "</Directory>" >> /etc/apache2/apache2.conf
-
-# Expose port 80
-EXPOSE 80
-
-# Start Apache in foreground
-CMD ["apache2-foreground"]
+EXPOSE 9000
+CMD ["php-fpm"]
