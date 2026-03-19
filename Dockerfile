@@ -20,8 +20,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
+# Copy .env.example to .env
+RUN cp .env.example .env || true
+
 # Install dependencies and skip scripts
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
+
+# Laravel optimizations
+RUN php artisan config:cache && php artisan route:cache
 
 # Permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
