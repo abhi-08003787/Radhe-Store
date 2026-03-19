@@ -24,15 +24,21 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 COPY . .
 
-# Copy .env.example to .env and generate key
-RUN cp .env.example .env
+# Copy .env.example to .env and ensure it exists
+RUN cp .env.example .env || true
 
 # Install composer dependencies with platform reqs ignored
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs
 
+# Generate app key if missing
+RUN php artisan key:generate
+
 # Laravel optimization
 RUN php artisan config:cache \
     && php artisan route:cache
+
+# Set correct permissions
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 9000
 CMD ["php-fpm"]
