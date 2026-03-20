@@ -78,7 +78,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
                 </button>
-                @if(Auth::check())
+                @auth
                     <!-- User Dropdown -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center gap-2 p-2 text-black/70 hover:text-[#D4AF37] transition-colors" aria-label="User Menu">
@@ -117,14 +117,15 @@
                             </form>
                         </div>
                     </div>
-                @else
+                @endauth
+                @guest
                     <a href="{{ route('login') }}" class="p-2 text-black/70 hover:text-[#D4AF37] transition-colors" aria-label="Login">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                             <circle cx="12" cy="7" r="4"/>
                         </svg>
                     </a>
-                @endif
+                @endguest
                 <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="relative p-2 text-black/70 hover:text-[#D4AF37] transition-colors" aria-label="Cart">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h15l-1.5 9h-13z"/>
@@ -146,15 +147,16 @@
             <a href="{{ route('shop.index') }}" class="block py-2 text-sm font-medium text-gray-700 hover:text-[#D4AF37] transition-colors">Shop</a>
             <a href="{{ route('about') }}" class="block py-2 text-sm font-medium text-gray-700 hover:text-[#D4AF37] transition-colors">About</a>
             <a href="{{ route('contact') }}" class="block py-2 text-sm font-medium text-gray-700 hover:text-[#D4AF37] transition-colors">Contact</a>
-            @if(Auth::check())
+            @auth
                 <a href="{{ route('dashboard') }}" class="block py-2 text-sm font-medium text-gray-700 hover:text-[#D4AF37] transition-colors">Account</a>
                 <form action="{{ route('logout') }}" method="POST" class="block">
                     @csrf
                     <button type="submit" class="py-2 text-sm font-medium text-gray-700 hover:text-[#D4AF37] transition-colors text-left">Logout</button>
                 </form>
-            @else
+            @endauth
+            @guest
                 <a href="{{ route('login') }}" class="block py-2 text-sm font-medium text-gray-700 hover:text-[#D4AF37] transition-colors">Login</a>
-            @endif
+            @endguest
         </div>
     </div>
 </header>
