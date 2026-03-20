@@ -9,7 +9,8 @@ use App\Http\Controllers\ContactController;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Slider;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -93,5 +94,15 @@ Route::get('/force-migrate', function () {
     } catch (\Exception $e) {
         return "<h1>Error! ❌</h1><pre>" . $e->getMessage() . "</pre>";
     }
+});
+
+Route::get('/setup-admin', function () {
+    $user = User::create([
+        'name' => 'Admin User',
+        'email' => 'admin@radhestore.com',
+        'password' => Hash::make('admin123'),
+        'role' => 'admin' // તમારા ટેબલ મુજબ જે રોલ હોય તે
+    ]);
+    return "Admin created! Login with: admin@radhestore.com / admin123";
 });
 

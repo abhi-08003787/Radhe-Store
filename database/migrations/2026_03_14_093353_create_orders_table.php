@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2)->default(0);
             $table->string('status')->default('ordered'); // ordered, delivered, canceled
             $table->integer('total_items')->default(1);
-            $table->timestamp('delivered_at')->nullable(); // ક્યારે ડિલિવર થયો તે માટે
+            // $table->timestamp('delivered_at')->nullable(); // ક્યારે ડિલિવર થયો તે માટે
             $table->timestamps();
         });
     }
