@@ -82,13 +82,15 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/setup-admin', function () {
-    $user = User::create([
-        'name' => 'Admin User',
-        'email' => 'admin@radhestore.com',
-        'password' => Hash::make('admin123'),
-        'role' => 'admin' // તમારા ટેબલ મુજબ જે રોલ હોય તે
-    ]);
-    return "Admin created! Login with: admin@radhestore.com / admin123";
+Route::get('/reset-admin-password', function () {
+    // અહીં તમારો એડમિન ઈમેલ લખો જે તમે પહેલા રાખ્યો હતો
+    $user = User::where('email', 'radhe0800@gmail.com')->first();
+    
+    if ($user) {
+        $user->password = Hash::make('8724'); // અહીં નવો પાસવર્ડ લખો
+        $user->save();
+        return "Password Updated Successfully! New Password is: 8724";
+    }
+    
+    return "User not found with this email.";
 });
-
