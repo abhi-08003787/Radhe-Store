@@ -82,20 +82,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/force-migrate', function () {
-    try {
-        // ૧. બધા ટેબલ્સ ડીલીટ કરીને નવેસરથી બનાવશે
-        Artisan::call('migrate:fresh', ['--force' => true]);
-        
-        // ૨. જો તમારે સીડર રન કરવા હોય તો (ઓપ્શનલ)
-        // Artisan::call('db:seed', ['--force' => true]);
-
-        return "<h1>Success! 🎉</h1><p>ડેટાબેઝ એકદમ ફ્રેશ થઈ ગયો છે.</p><a href='/'>હોમ પેજ પર જાઓ</a>";
-    } catch (\Exception $e) {
-        return "<h1>Error! ❌</h1><pre>" . $e->getMessage() . "</pre>";
-    }
-});
-
 Route::get('/setup-admin', function () {
     $user = User::create([
         'name' => 'Admin User',
