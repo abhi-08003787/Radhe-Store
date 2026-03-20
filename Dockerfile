@@ -11,6 +11,12 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# ICU અને Internationalization સપોર્ટ
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
 # 2. Apache Config - DocumentRoot સેટ કરવું
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
