@@ -42,4 +42,5 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-pl
 
 EXPOSE 80
 
-CMD php artisan migrate --force && apache2-foreground
+# જૂના ટેબલ્સ કાઢીને એકદમ ફ્રેશ ટેબલ્સ બનાવવા માટે
+CMD php artisan migrate:fresh --force && apache2-foreground
