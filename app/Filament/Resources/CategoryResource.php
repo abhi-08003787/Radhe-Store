@@ -43,9 +43,13 @@ class CategoryResource extends Resource
             Forms\Components\FileUpload::make('image')
                 ->label('Category Image')
                 ->image()
-                ->disk('public')
+                ->disk('cloudinary')
                 ->directory('categories')
                 ->visibility('public')
+                ->imageResizeMode('cover') 
+                ->imageCropAspectRatio('1:1') 
+                ->imageResizeTargetWidth('800') 
+                ->loadingIndicatorPosition('left') 
                 ->required(),
         ]);
     }
