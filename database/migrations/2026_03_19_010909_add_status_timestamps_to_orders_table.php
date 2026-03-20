@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamp('placed_at')->nullable();
             $table->timestamp('processing_at')->nullable();
             $table->timestamp('shipped_at')->nullable();
-            $table->timestamp('delivered_at')->nullable();
+            // $table->timestamp('delivered_at')->nullable();
         });
     }
 
