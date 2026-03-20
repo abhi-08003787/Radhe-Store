@@ -86,10 +86,10 @@ Route::get('/create-final-admin', function () {
     // આ કોડ નવો યુઝર બનાવશે
     $user = User::create([
         'name' => 'Radhe Admin',
-        'email' => 'radhe0800@gmail.com', // તમારો ઈમેલ
-        'password' => Hash::make('8724'), // તમારો પાસવર્ડ
-        'role' => 'admin', // જો તમારા ટેબલમાં રોલ હોય તો, નહીંતર આ લાઈન કાઢી નાખજો
+        'email' => 'radhe0800@gmail.com',
+        'password' => Hash::make('8724'),
+        'role' => 'admin', 
     ]);
     
-    return "Admin Account Created! Email: admin@radhestore.com, Password: admin@123";
+    return "Admin Account Created! Use Email: radhe0800@gmail.com and Password: 8724 to login.";
 });
