@@ -62,11 +62,17 @@ return [
     | a global endpoint for temporary storage. You may configure this below:
     |
     */
-    'temporary_file_upload' => [
-    'disk' => 'cloudinary', // અથવા 'public'
-    'rules' => ['file', 'max:20480'], // 20MB
-    'directory' => 'livewire-tmp',
+  'temporary_file_upload' => [
+    'disk' => 'cloudinary',        // અહીં 's3' હતું તેને બદલીને 'cloudinary' કરી દીધું છે
+    'rules' => ['file', 'max:20480'], 
+    'directory' => null,
     'middleware' => 'throttle:60,1',
+    'preview_mimes' => [
+        'png', 'gif', 'bmp', 'svg', 'wav', 'mp4',
+        'mov', 'avi', 'wmv', 'mp3', 'm4a',
+        'jpg', 'jpeg', 'mpga', 'webp',
+    ],
+    'max_upload_time' => 5,
 ],
     /*
     |---------------------------------------------------------------------------
