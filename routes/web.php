@@ -94,5 +94,3 @@ Route::get('/create-final-admin', function () {
     return "Admin Account Created! Use Email: radhe0800@gmail.com and Password: 8724 to login.";
 });
 
-Route::post('/livewire/upload-file', [\Livewire\Controllers\FileUploadHandler::class, 'handle'])
-    ->middleware(['web']);
