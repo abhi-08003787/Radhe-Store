@@ -63,13 +63,8 @@ return [
     |
     */
   'temporary_file_upload' => [
-    'disk' => 'cloudinary',
-    'rules' => 'file|max:10240',
-    'directory' => null,
-    'middleware' => null,
-    'preview_mimes' => ['png', 'gif', 'bmp', 'svg', 'jpg', 'jpeg', 'webp'],
-    'max_upload_time' => 5,
-],
+        'enabled' => false,
+    ],
     /*
     |---------------------------------------------------------------------------
     | Render On Redirect
