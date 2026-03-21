@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
 {
     \Illuminate\Support\Facades\URL::forceScheme('https');
 
-    // Very Important: Make sure Livewire temporary directory is not being used locally
+    // Completely bypass the local temp folder for Render's read-only filesystem
     config(['livewire.temporary_file_upload.disk' => 'cloudinary']);
 }
 }
