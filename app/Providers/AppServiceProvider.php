@@ -19,9 +19,15 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        config(['livewire.temporary_file_upload.disk' => 'cloudinary']);
-        config(['filesystems.default' => 'cloudinary']);
-        \Illuminate\Support\Facades\URL::forceScheme('https');
-    }
+{
+    // HTTPS ફોર્સ કરવા માટે
+    \Illuminate\Support\Facades\URL::forceScheme('https');
+
+    // ગમે તે થાય, સ્ટોરેજ ક્લાઉડિનરી જ રહેવું જોઈએ
+    config([
+        'filesystems.default' => 'cloudinary',
+        'filesystems.disks.cloudinary.driver' => 'cloudinary',
+        'livewire.temporary_file_upload.disk' => 'cloudinary',
+    ]);
+}
 }
