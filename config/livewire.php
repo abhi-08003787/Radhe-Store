@@ -64,7 +64,7 @@ return [
     */
 
   'temporary_file_upload' => [
-    'disk' => 'cloudinary', // આ લાઈન ખાસ ચેક કરો
+    'disk' => 'cloudinary',// આ લાઈન ખાસ ચેક કરો
     'rules' => 'file|mimes:png,jpg,jpeg,webp|max:10240',
     // ...
 ],
