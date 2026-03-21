@@ -63,16 +63,11 @@ return [
     |
     */
 
-   'temporary_file_upload' => [
-    'disk' => 'cloudinary', 
-    'rules' => 'file|mimes:png,jpg,jpeg,webp|max:10240', // નિયમો સ્પષ્ટ કરો
-    'directory' => null,
-    'middleware' => null,
-    'preview_mimes' => ['png', 'gif', 'bmp', 'svg', 'jpg', 'jpeg', 'webp'],
-    'max_upload_time' => 5,
-    'cleanup' => true,
+  'temporary_file_upload' => [
+    'disk' => 'cloudinary', // આ લાઈન ખાસ ચેક કરો
+    'rules' => 'file|mimes:png,jpg,jpeg,webp|max:10240',
+    // ...
 ],
-
     /*
     |---------------------------------------------------------------------------
     | Render On Redirect
