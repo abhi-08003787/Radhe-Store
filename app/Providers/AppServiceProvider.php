@@ -21,7 +21,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
 {
     \Illuminate\Support\Facades\URL::forceScheme('https');
-    // Force livewire to use the same disk for temporary uploads
+
+    // Very Important: Make sure Livewire temporary directory is not being used locally
     config(['livewire.temporary_file_upload.disk' => 'cloudinary']);
 }
 }

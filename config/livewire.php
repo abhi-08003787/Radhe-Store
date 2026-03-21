@@ -63,6 +63,7 @@ return [
     |
     */
   'temporary_file_upload' => [
+        'disk' => 'cloudinary',
         'enabled' => false,
     ],
     /*
