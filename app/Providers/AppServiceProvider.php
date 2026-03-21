@@ -21,6 +21,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
 {
     \Illuminate\Support\Facades\URL::forceScheme('https');
-    config(['livewire.temporary_file_upload.disk' => 'cloudinary']);
 }
 }
