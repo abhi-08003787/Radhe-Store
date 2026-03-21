@@ -63,15 +63,11 @@ return [
     |
     */
   'temporary_file_upload' => [
-    'disk' => 'cloudinary',        // અહીં 's3' હતું તેને બદલીને 'cloudinary' કરી દીધું છે
-    'rules' => ['file', 'max:20480'], 
+    'disk' => 'cloudinary',        // અહીં ભૂલેચૂકે 's3' ન લખાઈ જાય, 'cloudinary' જ લખજે.
+    'rules' => 'file|max:10240',   // 10MB સુધીની મર્યાદા.
     'directory' => null,
-    'middleware' => 'throttle:60,1',
-    'preview_mimes' => [
-        'png', 'gif', 'bmp', 'svg', 'wav', 'mp4',
-        'mov', 'avi', 'wmv', 'mp3', 'm4a',
-        'jpg', 'jpeg', 'mpga', 'webp',
-    ],
+    'middleware' => null,          // હાલ પૂરતું આને null રાખ જેથી કોઈ બ્લોક ન કરે.
+    'preview_mimes' => ['png', 'gif', 'bmp', 'svg', 'jpg', 'jpeg', 'webp'],
     'max_upload_time' => 5,
 ],
     /*
