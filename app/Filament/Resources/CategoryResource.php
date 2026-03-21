@@ -43,7 +43,7 @@ class CategoryResource extends Resource
             Forms\Components\FileUpload::make('image')
                 ->label('Category Image')
                 ->image()
-                ->disk('cloudinary')
+                ->disk('public')
                 ->directory('categories')
                 ->visibility('public')
                 ->imageResizeMode('cover') 
@@ -60,7 +60,9 @@ class CategoryResource extends Resource
         ->columns([
             Tables\Columns\ImageColumn::make('image')
                 ->label('Image')
-                ->circular(),
+                ->circular()
+                ->disk('public')
+                ->url(fn ($record) => asset('storage/' . $record->image)),
 
             Tables\Columns\TextColumn::make('name')
                 ->label('Category Name')
