@@ -62,8 +62,8 @@ return [
     | a global endpoint for temporary storage. You may configure this below:
     |
     */
-  'temporary_file_upload' => [
-        'disk' => 'cloudinary',
+    'temporary_file_upload' => [
+    'disk' => 'public',
     ],
     /*
     |---------------------------------------------------------------------------
