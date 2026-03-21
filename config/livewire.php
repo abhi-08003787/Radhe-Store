@@ -62,11 +62,11 @@ return [
     | a global endpoint for temporary storage. You may configure this below:
     |
     */
-
-  'temporary_file_upload' => [
-    'disk' => 'cloudinary',// આ લાઈન ખાસ ચેક કરો
-    'rules' => 'file|mimes:png,jpg,jpeg,webp|max:10240',
-    // ...
+    'temporary_file_upload' => [
+    'disk' => 'cloudinary', // અથવા 'public'
+    'rules' => ['file', 'max:20480'], // 20MB
+    'directory' => 'livewire-tmp',
+    'middleware' => 'throttle:60,1',
 ],
     /*
     |---------------------------------------------------------------------------
