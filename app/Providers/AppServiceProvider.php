@@ -19,10 +19,9 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-{
-    \Illuminate\Support\Facades\URL::forceScheme('https');
-
-    // Completely bypass the local temp folder for Render's read-only filesystem
-    config(['livewire.temporary_file_upload.disk' => 'cloudinary']);
-}
+    {
+        config(['livewire.temporary_file_upload.disk' => 'cloudinary']);
+        config(['filesystems.disks.cloudinary.driver' => 'cloudinary']);
+        \Illuminate\Support\Facades\URL::forceScheme('https');
+    }
 }
