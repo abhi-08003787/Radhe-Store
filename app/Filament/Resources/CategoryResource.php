@@ -46,6 +46,8 @@ class CategoryResource extends Resource
                 ->disk('public')
                 ->directory('categories')
                 ->visibility('public')
+                ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
+                ->maxSize(2048) // 2MB max
                 ->imageResizeMode('cover') 
                 ->imageCropAspectRatio('1:1') 
                 ->imageResizeTargetWidth('800') 
@@ -62,7 +64,13 @@ class CategoryResource extends Resource
                 ->label('Image')
                 ->circular()
                 ->disk('public')
-                ->url(fn ($record) => asset('storage/' . $record->image)),
+                ->defaultImageUrl(url('/images/default-category.jpg'))
+                ->getStateUsing(function ($record) {
+                    if ($record->image && file_exists(storage_path('app/public/' . $record->image))) {
+                        return asset('storage/' . $record->image);
+                    }
+                    return asset('images/default-category.jpg');
+                }),
 
             Tables\Columns\TextColumn::make('name')
                 ->label('Category Name')
