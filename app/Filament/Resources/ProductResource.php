@@ -75,7 +75,11 @@ class ProductResource extends Resource
                             FileUpload::make('image')
                                 ->label('Upload images')
                                 ->image()
+                                ->disk('public')
                                 ->directory('products')
+                                ->visibility('public')
+                                ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
+                                ->maxSize(2048) // 2MB max
                                 ->required(),
 
                             Grid::make(2)->schema([
@@ -164,7 +168,16 @@ class ProductResource extends Resource
         ->columns([
             // 1. ફોટો
             ImageColumn::make('image')
-                ->label('image'),
+                ->label('image')
+                ->circular()
+                ->disk('public')
+                ->defaultImageUrl(url('/images/default-product.jpg'))
+                ->getStateUsing(function ($record) {
+                    if ($record->image && file_exists(storage_path('app/public/products/' . $record->image))) {
+                        return asset('storage/products/' . $record->image);
+                    }
+                    return asset('images/default-product.jpg');
+                }),
 
             // 2. નામ
             TextColumn::make('name')

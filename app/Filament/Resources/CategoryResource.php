@@ -66,8 +66,8 @@ class CategoryResource extends Resource
                 ->disk('public')
                 ->defaultImageUrl(url('/images/default-category.jpg'))
                 ->getStateUsing(function ($record) {
-                    if ($record->image && file_exists(storage_path('app/public/' . $record->image))) {
-                        return asset('storage/' . $record->image);
+                    if ($record->image && file_exists(storage_path('app/public/categories/' . $record->image))) {
+                        return asset('storage/categories/' . $record->image);
                     }
                     return asset('images/default-category.jpg');
                 }),
