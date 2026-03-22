@@ -116,7 +116,7 @@
                         @forelse($products as $product)
                             <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-black/5 group relative">
                                 <div class="aspect-square overflow-hidden relative">
-                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?auto=format&fit=crop&q=80&w=1000' }}" 
+                                    <img src="{{ $product->image ? asset('storage/' . (str_starts_with($product->image, 'products/') || str_starts_with($product->image, 'categories/') ? $product->image : 'products/' . $product->image)) : 'https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?auto=format&fit=crop&q=80&w=1000' }}" 
                                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                                          alt="{{ $product->name }}">
                                     @if($product->categoryRel)
