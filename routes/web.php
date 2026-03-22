@@ -16,6 +16,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderTrackController;
+use App\Http\Controllers\ImageUploadController;
 
 Route::get('/', function () {
     $categories = Category::latest()->get();
@@ -93,4 +94,9 @@ Route::get('/create-final-admin', function () {
     
     return "Admin Account Created! Use Email: radhe0800@gmail.com and Password: 8724 to login.";
 });
+
+// Image Upload Routes for Cloudinary
+Route::post('/upload-image', [ImageUploadController::class, 'uploadImage'])->name('image.upload');
+Route::post('/delete-image', [ImageUploadController::class, 'deleteImage'])->name('image.delete');
+Route::get('/image-info/{public_id}', [ImageUploadController::class, 'getImageInfo'])->name('image.info');
 
