@@ -43,7 +43,7 @@ class CategoryResource extends Resource
             Forms\Components\FileUpload::make('image')
                 ->label('Category Image')
                 ->image()
-                ->disk('public')
+                ->disk('cloudinary')
                 ->directory('categories')
                 ->visibility('public')
                 ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
@@ -63,13 +63,12 @@ class CategoryResource extends Resource
             Tables\Columns\ImageColumn::make('image')
                 ->label('Image')
                 ->circular()
-                ->disk('public')
-                ->defaultImageUrl(url('/images/default-category.jpg'))
+                ->defaultImageUrl('https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg')
                 ->getStateUsing(function ($record) {
-                    if ($record->image && file_exists(storage_path('app/public/categories/' . $record->image))) {
-                        return asset('storage/categories/' . $record->image);
+                    if ($record->image) {
+                        return $record->image; // Cloudinary URL stored directly
                     }
-                    return asset('images/default-category.jpg');
+                    return 'https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg';
                 }),
 
             Tables\Columns\TextColumn::make('name')

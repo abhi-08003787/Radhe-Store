@@ -75,7 +75,7 @@ class ProductResource extends Resource
                             FileUpload::make('image')
                                 ->label('Upload images')
                                 ->image()
-                                ->disk('public')
+                                ->disk('cloudinary')
                                 ->directory('products')
                                 ->visibility('public')
                                 ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
@@ -170,13 +170,12 @@ class ProductResource extends Resource
             ImageColumn::make('image')
                 ->label('image')
                 ->circular()
-                ->disk('public')
-                ->defaultImageUrl(url('/images/default-product.jpg'))
+                ->defaultImageUrl('https://res.cloudinary.com/demo/image/upload/v1/default-product.jpg')
                 ->getStateUsing(function ($record) {
-                    if ($record->image && file_exists(storage_path('app/public/products/' . $record->image))) {
-                        return asset('storage/products/' . $record->image);
+                    if ($record->image) {
+                        return $record->image; // Cloudinary URL stored directly
                     }
-                    return asset('images/default-product.jpg');
+                    return 'https://res.cloudinary.com/demo/image/upload/v1/default-product.jpg';
                 }),
 
             // 2. નામ

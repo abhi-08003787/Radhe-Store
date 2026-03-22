@@ -13,7 +13,7 @@ return [
     |
     */
 
-   'default' => 'public',
+   'default' => env('APP_ENV') === 'production' ? 'cloudinary' : 'public',
 
 'disks' => [
 
