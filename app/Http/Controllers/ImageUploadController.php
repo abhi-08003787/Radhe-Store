@@ -11,7 +11,7 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 class ImageUploadController extends Controller
 {
     /**
-     * Upload image to Cloudinary and return secure URL
+     * Upload image to storage (local or Cloudinary) and return path/URL
      */
     public function uploadImage(Request $request)
     {
@@ -22,23 +22,38 @@ class ImageUploadController extends Controller
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
+                $folder = $request->input('folder', 'products');
                 
-                // Upload to Cloudinary
-                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-                    'folder' => 'products',
-                    'resource_type' => 'image',
-                    'format' => 'webp',
-                    'quality' => 'auto',
-                    'crop' => 'limit',
-                    'width' => 800,
-                    'height' => 800
-                ])->getSecurePath();
+                // Check if using Cloudinary (production) or local storage
+                if (env('APP_ENV') === 'production') {
+                    // Upload to Cloudinary
+                    $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                        'folder' => $folder,
+                        'resource_type' => 'image',
+                        'format' => 'webp',
+                        'quality' => 'auto',
+                        'crop' => 'limit',
+                        'width' => 800,
+                        'height' => 800
+                    ])->getSecurePath();
 
-                return response()->json([
-                    'success' => true,
-                    'url' => $uploadedFileUrl,
-                    'message' => 'Image uploaded successfully'
-                ]);
+                    return response()->json([
+                        'success' => true,
+                        'url' => $uploadedFileUrl,
+                        'message' => 'Image uploaded to Cloudinary successfully'
+                    ]);
+                } else {
+                    // Upload to local storage
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $path = $file->storeAs($folder, $filename, 'public');
+                    
+                    return response()->json([
+                        'success' => true,
+                        'path' => $path, // e.g., "products/image.jpg"
+                        'url' => asset('storage/' . $path),
+                        'message' => 'Image uploaded to local storage successfully'
+                    ]);
+                }
             }
 
             return response()->json([
