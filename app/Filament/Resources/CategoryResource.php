@@ -43,11 +43,11 @@ class CategoryResource extends Resource
             Forms\Components\FileUpload::make('image')
                 ->label('Category Image')
                 ->image()
-                ->disk('cloudinary')
+                ->disk(env('APP_ENV') === 'production' ? 'cloudinary' : 'public')
                 ->directory('categories')
                 ->visibility('public')
                 ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
-                ->maxSize(2048) // 2MB max
+                ->maxSize(2048)
                 ->imageResizeMode('cover') 
                 ->imageCropAspectRatio('1:1') 
                 ->imageResizeTargetWidth('800') 
@@ -65,9 +65,22 @@ class CategoryResource extends Resource
                 ->circular()
                 ->defaultImageUrl('https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg')
                 ->getStateUsing(function ($record) {
-                    if ($record->image) {
-                        return $record->image; // Cloudinary URL stored directly
+                    if (!$record->image) {
+                        return 'https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg';
                     }
+                    
+                    // Check if image is a full URL (Cloudinary)
+                    if (str_starts_with($record->image, 'http')) {
+                        return $record->image;
+                    }
+                    
+                    // Check if image is a local path
+                    $fullPath = storage_path('app/public/categories/' . $record->image);
+                    if (file_exists($fullPath)) {
+                        return asset('storage/categories/' . $record->image);
+                    }
+                    
+                    // Fallback
                     return 'https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg';
                 }),
 

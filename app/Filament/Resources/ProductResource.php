@@ -75,11 +75,11 @@ class ProductResource extends Resource
                             FileUpload::make('image')
                                 ->label('Upload images')
                                 ->image()
-                                ->disk('cloudinary')
+                                ->disk(env('APP_ENV') === 'production' ? 'cloudinary' : 'public')
                                 ->directory('products')
                                 ->visibility('public')
                                 ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
-                                ->maxSize(2048) // 2MB max
+                                ->maxSize(2048)
                                 ->required(),
 
                             Grid::make(2)->schema([
@@ -172,9 +172,22 @@ class ProductResource extends Resource
                 ->circular()
                 ->defaultImageUrl('https://res.cloudinary.com/demo/image/upload/v1/default-product.jpg')
                 ->getStateUsing(function ($record) {
-                    if ($record->image) {
-                        return $record->image; // Cloudinary URL stored directly
+                    if (!$record->image) {
+                        return 'https://res.cloudinary.com/demo/image/upload/v1/default-product.jpg';
                     }
+                    
+                    // Check if image is a full URL (Cloudinary)
+                    if (str_starts_with($record->image, 'http')) {
+                        return $record->image;
+                    }
+                    
+                    // Check if image is a local path
+                    $fullPath = storage_path('app/public/products/' . $record->image);
+                    if (file_exists($fullPath)) {
+                        return asset('storage/products/' . $record->image);
+                    }
+                    
+                    // Fallback
                     return 'https://res.cloudinary.com/demo/image/upload/v1/default-product.jpg';
                 }),
 

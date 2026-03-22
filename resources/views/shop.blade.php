@@ -116,7 +116,7 @@
                         @forelse($products as $product)
                             <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-black/5 group relative">
                                 <div class="aspect-square overflow-hidden relative">
-                                    <x-cloudinary-image :image="$product->image" :alt="$product->name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                    <x-smart-image :image="$product->image" :alt="$product->name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" fallback="https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?auto=format&fit=crop&q=80&w=1000" />
                                     @if($product->categoryRel)
                                         <div class="absolute top-3 left-3">
                                             <span class="bg-white/90 backdrop-blur-sm text-[#2b0505] text-[8px] font-bold uppercase tracking-widest px-2 py-1 rounded-full shadow-sm">
