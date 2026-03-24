@@ -74,10 +74,31 @@ class CategoryResource extends Resource
                         return $record->image;
                     }
                     
-                    // Check if image is a local path
-                    $fullPath = storage_path('app/public/categories/' . $record->image);
-                    if (file_exists($fullPath)) {
-                        return asset('storage/categories/' . $record->image);
+                    // Extract filename if path includes folder
+                    $filename = $record->image;
+                    if (str_contains($record->image, '/')) {
+                        $parts = explode('/', $record->image);
+                        $filename = end($parts);
+                    }
+                    
+                    // Check multiple possible folder names
+                    $possiblePaths = [
+                        storage_path('app/public/categories/' . $filename),
+                        storage_path('app/public/category/' . $filename),
+                        storage_path('app/public/' . $record->image),
+                    ];
+                    
+                    foreach ($possiblePaths as $path) {
+                        if (file_exists($path)) {
+                            // Return correct URL based on which folder exists
+                            if (str_contains($path, '/categories/')) {
+                                return asset('storage/categories/' . $filename);
+                            } elseif (str_contains($path, '/category/')) {
+                                return asset('storage/category/' . $filename);
+                            } else {
+                                return asset('storage/' . $record->image);
+                            }
+                        }
                     }
                     
                     // Fallback
