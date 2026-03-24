@@ -41,19 +41,19 @@ class CategoryResource extends Resource
 
           
             Forms\Components\FileUpload::make('image')
-                ->label('Category Image')
-                ->image()
-                ->disk(env('APP_ENV') === 'production' ? 'cloudinary' : 'public')
-                ->directory('categories')
-                ->visibility('public')
-                ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
-                ->maxSize(2048)
-                ->imageResizeMode('cover') 
-                ->imageCropAspectRatio('1:1') 
-                ->imageResizeTargetWidth('800') 
-                ->loadingIndicatorPosition('left') 
-                ->required(),
-        ]);
+            ->label('Category Image')
+            ->image()
+            ->disk('public') // 🔥 FIXED (no cloudinary)
+            ->directory('categories')
+            ->visibility('public')
+            ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png'])
+            ->maxSize(2048)
+            ->imageResizeMode('cover')
+            ->imageCropAspectRatio('1:1')
+            ->imageResizeTargetWidth('800')
+            ->loadingIndicatorPosition('left')
+            ->required(),
+            ]);
     }
 
     public static function table(Table $table): Table
