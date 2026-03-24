@@ -59,58 +59,22 @@ class CategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->columns([
-            Tables\Columns\ImageColumn::make('image')
-                ->label('Image')
-                ->circular()
-                ->defaultImageUrl('https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg')
-                ->getStateUsing(function ($record) {
-                    if (!$record->image) {
-                        return 'https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg';
-                    }
-                    
-                    // Check if image is a full URL (Cloudinary)
-                    if (str_starts_with($record->image, 'http')) {
-                        return $record->image;
-                    }
-                    
-                    // Extract filename if path includes folder
-                    $filename = $record->image;
-                    if (str_contains($record->image, '/')) {
-                        $parts = explode('/', $record->image);
-                        $filename = end($parts);
-                    }
-                    
-                    // Check multiple possible folder names
-                    $possiblePaths = [
-                        storage_path('app/public/categories/' . $filename),
-                        storage_path('app/public/category/' . $filename),
-                        storage_path('app/public/' . $record->image),
-                    ];
-                    
-                    foreach ($possiblePaths as $path) {
-                        if (file_exists($path)) {
-                            // Return correct URL based on which folder exists
-                            if (str_contains($path, '/categories/')) {
-                                return asset('storage/categories/' . $filename);
-                            } elseif (str_contains($path, '/category/')) {
-                                return asset('storage/category/' . $filename);
-                            } else {
-                                return asset('storage/' . $record->image);
-                            }
-                        }
-                    }
-                    
-                    // Fallback
-                    return 'https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg';
-                }),
+    ->columns([
+        Tables\Columns\ImageColumn::make('image')
+            ->label('Image')
+            ->circular()
+            ->defaultImageUrl('https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg')
+            ->url(fn ($record) => $record->image 
+                ? asset($record->image) 
+                : 'https://res.cloudinary.com/demo/image/upload/v1/default-placeholder.jpg'
+            ),
 
-            Tables\Columns\TextColumn::make('name')
-                ->label('Category Name')
-                ->searchable(),
+        Tables\Columns\TextColumn::make('name')
+            ->label('Category Name')
+            ->searchable(),
 
-            Tables\Columns\TextColumn::make('slug')
-                ->label('Slug'),
+        Tables\Columns\TextColumn::make('slug')
+            ->label('Slug'),
         ]);
     }
 
